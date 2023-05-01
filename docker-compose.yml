@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${PORT}:${PORT}'
+    restart: unless-stopped
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: v123456
+      DB_DATABASE: oven_todos
+      DB_PORT: 5433
+
+    depends_on:
+      - db
+
+  db:
+    container_name: oven_todo_db
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: v123456
+      POSTGRES_DB: oven_todos
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
